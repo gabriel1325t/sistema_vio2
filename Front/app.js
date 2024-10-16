@@ -1,105 +1,57 @@
-const connect = require("../db/connect");
-module.exports = class organizadorController {
-  static async createOrganizador(req, res) {
-    const { nome, email, senha, telefone } = req.body;
+//Acessao objeto "document" que  respresenta a página html
 
-    if (!nome || !email || !senha || !telefone) {
-      return res
-        .status(400)
-        .json({ error: "Todos os campos devem ser preenchidos" });
-    } else if (!email.includes("@")) {
-      return res.status(400).json({ error: "Email inválido." });
-    } else if (isNaN(telefone) || telefone.length !== 11) {
-      return res
-        .status(400)
-        .json({
-          error: "Número inválido. Deve conter exatamente 11 dígitos numéricos",
+//const { json } = require("body-parser");
+//const { application, response } = require("express");
+
+//Seleciona o elemento com o id indicado do formulário
+document
+  .getElementById("formulario-registro")
+  //adiciona o ouvinte de evento(submit)para capturar o envio do formulário
+  .addEventListener("submit", function (event) {
+    //previne o comportamento padrão do formulário, ou seja, impede que ele saja enviado e recarregue a página
+    event.preventDefault();
+    //Captura os valores dos compos de formulario
+    const name = document.getElementById("nome").value;
+    const cpf = document.getElementById("cpf").value;
+    const email = document.getElementById("email").value;
+    const password = document.getElementById("senha").value;
+
+    //Requisção HTTP para o endpoint de cadastro de usuário
+    fetch("http://localhost:5000/api/v1/user", {
+      //Realiza uma chamada HTTP para o servidor (a rota definida)
+      method: "POST",
+      headers: {
+        //A requisição será em formato json
+        "Content-Type": "application/json",
+      },
+      //Transforma os dados do formulário em uma string json para serem emviados no corpo da requisição
+      body: JSON.stringify({ name, cpf, password, email }),
+    })
+      .then((response) => {
+        //Tratamento da resposta do servidor / API
+        if (response.ok) {
+          //Verifica se a resposta foi bem sucedida(status 2xx)
+          return response.json();
+        }
+        //Convertendo o erro em formato json
+        return response.json().then((err) => {
+          //Mensagem retonada do servidor,acessada pela chave "error"
+          throw new Error(err.error);
         });
-    } else {
-      // Construção da query INSERT
-      const query = `INSERT INTO usuario (cpf, password, email, name) VALUES('${cpf}', '${password}', '${email}', '${name}')`;
-      // Executando a query criada
-      try {
-        connect.query(query, function (err) {
-          if (err) {
-            console.log(err);
-            console.log(err.code);
-            if (err.code === "ER_DUP_ENTRY") {
-              return res
-                .status(400)
-                .json({ error: "O Email já está vinculado a outro usuário" });
-            } else {
-              return res
-                .status(500)
-                .json({ error: "Erro interno do servidor" });
-            }
-          }else{
-            return res.status(201).json({message: "Organizador criado com sucesso"});
-          }
-        });
-      } catch (error) {
-        console.error(error);
-        res.status(500).json({error:"Erro interno do servidor"})
-      }
-
-    }
-  }
-
-  static async getAllOrganizador(req, res) {
-    return res
-      .status(200)
-      .json({ message: "Obtendo todos os usuários", organizadores });
-  }
-
-  static async updateOrganizador(req, res) {
-    //Desestrutura e recupera os dados enviados via corpo da requisição
-    const { nome, email, senha, telefone } = req.body;
-
-    //Validar se todos os campos foram preenchidos
-    if (!nome || !email || !senha || !telefone) {
-      return res
-        .status(400)
-        .json({ error: "Todos os campos devem ser preenchidos" });
-    }
-
-    //Procurar index do organizador no Array 'users' pelo email
-    const organizadorIndex = organizadores.findIndex(
-      (organizadores) => organizadores.email === email
-    );
-    //Se usuario não for encontrado organizadorIndex equivale a -1
-    if (organizadorIndex == -1) {
-      return res.status(400).json({ error: "Usuario não encontrado" });
-    }
-
-    //Atualiza os dados do usuário no Array 'organizadores'
-    organizadores[organizadorIndex] = { nome, email, senha, telefone };
-
-    return res
-      .status(200)
-      .json({
-        message: "Usuario atualizado",
-        organizador: organizadores[organizadorIndex],
+      }) //fechamento da then(response)
+      .then((data) => {
+        //Executa a resposta de sucesso -retorna ao usário final
+        //Exibe um alerta para o usuário final(front) com o nome do usuário que acabou de ser cadastrado
+        //alert("Usuário cadastrado com sucesso! " + data.user.name);
+        alert(data.message);
+        //exibe o log no terminal
+        console.log("Usuario criado: ", data.user);
+        //Reseta os campos do formulário após osucesso do trabalho
+        document.getElementById("formulario-registro").reset();
+      })
+      .catch((error) => {
+        //Captura qualquer erro que ocorra durente o processo da requisição /resposta
+        alert("Erro no cadastro:" + error.message);
+        console.error("Erro:", error.message);
       });
-  }
-
-  static async deleteOrganizador(req, res) {
-    //Obtém o parametro 'id' da requisição, que é o email do orgaizador a ser deletado
-    const OrganizadorId = req.params.OrganizadorId;
-    //params vai na minha url
-
-    //Procurar index do usuario no Array 'organizadores' pelo email
-    const organizadorIndex = organizadores.findIndex(
-      (organizador) => organizador.OrganizadorId === OrganizadorId
-    );
-
-    //Se usuario não for encontrado organizadorIndex equivale a -1
-    if (organizadorIndex == -1) {
-      return res.status(400).json({ error: "Usuario não encontrado" });
-    }
-
-    //Removendo o organizador do Array 'organizadores'
-    organizadores.splice(organizadorIndex, 1);
-
-    return res.status(200).json({ message: "Usuario Apagado" });
-  }
-};
+  });
