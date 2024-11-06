@@ -104,7 +104,6 @@ module.exports = class organizadorController {
     }
 
   }
-
   static async deleteOrganizador(req, res) {
     const organizadorId = req.params.id;
     const query = `DELETE FROM organizador WHERE id_organizador = ?`;
