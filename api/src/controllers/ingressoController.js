@@ -10,11 +10,6 @@ module.exports = class eventoController {
           .status(400)
           .json({ error: "Todos os campos devem ser preenchidos!" });
       }
-      if (tipo != "VIP" | "PISTA" ) {
-        return res
-          .status(400)
-          .json({ error: "O ingresso deve ser VIP ou PISTA" });
-      }
 
       const query = `INSERT into ingresso (preco, tipo, fk_id_evento) values (?, ?, ?)`;
     const values = [preco, tipo, fk_id_evento];
