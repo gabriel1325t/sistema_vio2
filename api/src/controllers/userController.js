@@ -70,16 +70,16 @@ module.exports = class userController {
   }
   static async updateUser(req, res) {
     // Desestrutura e recupera os dados enviados via corpo da requisição
-    const {id, name, email, password, cpf } = req.body;
+    const { id, name, email, password, cpf } = req.body;
 
     // Validar se todos os campos foram preenchidos
-    if (  !name || !email || !password || !cpf) {
+    if (!name || !email || !password || !cpf) {
       return res
         .status(400)
         .json({ error: "Todos os campos devem ser preenchidos" });
     }
     const query = `UPDATE usuario SET name=?,email=?,password=?, cpf=? WHERE id_usuario = ?`;
-    const values = [ name, email, password, cpf, id];
+    const values = [name, email, password, cpf, id];
 
     try {
       connect.query(query, values, function (err, results) {
@@ -109,32 +109,27 @@ module.exports = class userController {
     }
   }
 
+  static async deleteUser(req, res) {
+    const usercpf = req.params.cpf;
+    const query = `DELETE FROM usuario WHERE id_usuario = ?`;
+    const values = [usercpf];
 
-  
-    static async deleteUser(req, res) {
-      const usercpf = req.params.cpf;
-      const query = `DELETE FROM usuario WHERE id_usuario = ?`;
-      const values = [usercpf];
-  
-      try {
-        connect.query(query, values, function (err, results) {
-          if (err) {
-            console.error(err);
-            return res.status(500).json({ error: "Erro interno do servidor" });
-          }
-  
-          if (results.affectedRows === 0) {
-            return res.status(404).json({ error: "Usuario não encontrado" });
-          }
-  
-          return res
-            .status(200)
-            .json({ message: "Usuario exluido com sucesso" });
-        });
-      } catch (error) {
-        console.error(error);
-        return res.status(500).json
-          ({error:"Erro interno do servidor"})
-      }
+    try {
+      connect.query(query, values, function (err, results) {
+        if (err) {
+          console.error(err);
+          return res.status(500).json({ error: "Erro interno do servidor" });
+        }
+
+        if (results.affectedRows === 0) {
+          return res.status(404).json({ error: "Usuario não encontrado" });
+        }
+
+        return res.status(200).json({ message: "Usuario exluido com sucesso" });
+      });
+    } catch (error) {
+      console.error(error);
+      return res.status(500).json({ error: "Erro interno do servidor" });
+    }
   }
 };
