@@ -172,37 +172,32 @@ module.exports = class eventoController {
       }
       
   }   
-        // Função para listar eventos nos próximos 7 dias a partir de uma data fornecida
-        static async getEventosProximos7Dias(req, res) {
-          const dataInicial = req.params.data; // Data recebida nos parâmetros, formato esperado: 'YYYY-MM-DD'
-      
-          // Verifica se a data está no formato correto
-          if (!dataInicial || isNaN(Date.parse(dataInicial))) {
-            return res.status(400).json({ error: "Data inválida!" });
-          }
-      
-          const dataInicialObj = new Date(dataInicial);
-          const dataFinalObj = new Date(dataInicialObj);
-          dataFinalObj.setDate(dataFinalObj.getDate() + 7); // Calcula a data final (7 dias após a data inicial)
-      
-          const query = `SELECT * FROM evento WHERE data_hora BETWEEN ? AND ?`;
-          const values = [dataInicialObj, dataFinalObj];
-      
-          try {
-            connect.query(query, values, (err, results) => {
-              if (err) {
-                console.error(err);
-                return res.status(500).json({ error: "Erro ao buscar eventos" });
-              }
-      
-              return res
-                .status(200)
-                .json({ message: "Eventos dos próximos 7 dias listados com sucesso!", eventos: results });
-            });
-          } catch (error) {
-            console.error("Erro ao executar a consulta:", error);
-            return res.status(500).json({ error: "Erro interno do servidor!" });
-          }
-        
+  static async getEventosProximos(req, res) {
+    const query = `SELECT * FROM evento`;
+    const data_hora = req.params.data_hora;
+
+    try {
+      connect.query(query, data_hora, (err, results) => {
+        if (err) {
+          console.log(err);
+          return res.status(500).json({ error: "Erro ao localizar o evento!" });
+        }
+
+        let dataInicial = new Date("2024-11-01"); 
+        let dataFinal = new Date("2024-11-05"); 
+
+        // Loop que vai de dataInicial até dataFinal
+        for (
+          let dataAtual = new Date(dataInicial);
+          dataAtual <= dataFinal;
+          dataAtual.setDate(dataAtual.getDate() + 1)
+        ) {
+          console.log(dataAtual.toISOString().split("T")[0]);
+        }
+      });
+    } catch (error) {
+      console.log("Erro ao executar a consulta!", error);
+      res.status(500).json({ error: "Erro interno do servidor" });
+    }
       };
 };
