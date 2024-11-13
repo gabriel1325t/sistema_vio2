@@ -198,5 +198,4 @@ module.exports = class eventoController {
       return res.status(500).json({ error: "Erro ao buscar eventos" });
     }
   }
-
 };

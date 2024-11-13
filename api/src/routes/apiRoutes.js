@@ -17,7 +17,7 @@ router.delete('/organizador/:id', organizadorController.deleteOrganizador);
 
 const eventoController = require("../controllers/eventoController")
 //rotas eventoController
-router.get('/evento/Lista',eventoController.getEventosdia);
+router.get('/evento/proximo',eventoController.getEventosdia);
 router.get('/evento/data',eventoController.getEventosPorData);
 router.post('/evento',eventoController.createEvento);
 router.get('/evento',eventoController.getAllEventos);
