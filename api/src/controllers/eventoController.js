@@ -172,32 +172,31 @@ module.exports = class eventoController {
       }
       
   }   
-  static async getEventosProximos(req, res) {
-    const query = `SELECT * FROM evento`;
-    const data_hora = req.params.data_hora;
+  static async getEventosdia(req,res){
+    const dataRecebida = req.params.data;
 
+    // Converte a data recebida em um objeto Date
+    const dataInicial = new Date(dataRecebida);
+    const dataFinal = new Date(dataInicial);
+    dataFinal.setDate(dataInicial.getDate() + 7); // Adiciona 7 dias à data inicial
+
+    const dataInicial2 = new Date("2024-01-01").toISOString().split('T')[0];
+    const dataFinal2 = new Date("2024-01-07").toISOString().split('T')[0];
+
+    const query = `
+      SELECT * FROM evento WHERE data_hora >= ? AND data_hora <= ?`;
     try {
-      connect.query(query, data_hora, (err, results) => {
-        if (err) {
-          console.log(err);
-          return res.status(500).json({ error: "Erro ao localizar o evento!" });
+     
+      connect.query(query,[dataInicial2, dataFinal2], (err, results) => {
+        if (err) {console.error(err);return res.status(500).json({ error: "Erro ao buscar eventos" });
         }
 
-        let dataInicial = new Date("2024-11-01"); 
-        let dataFinal = new Date("2024-11-05"); 
-
-        // Loop que vai de dataInicial até dataFinal
-        for (
-          let dataAtual = new Date(dataInicial);
-          dataAtual <= dataFinal;
-          dataAtual.setDate(dataAtual.getDate() + 1)
-        ) {
-          console.log(dataAtual.toISOString().split("T")[0]);
-        }
+        return res.status(200).json({ message: "OK", dataInicial2, dataFinal2 });
       });
     } catch (error) {
-      console.log("Erro ao executar a consulta!", error);
-      res.status(500).json({ error: "Erro interno do servidor" });
+      console.error(err);
+      return res.status(500).json({ error: "Erro ao buscar eventos" });
     }
-      };
+  }
+
 };
