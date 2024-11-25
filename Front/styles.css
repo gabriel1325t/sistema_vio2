@@ -8,7 +8,7 @@
 /* Define estilos gerais para o corpo da página */
 body {
   font-family: Arial, sans-serif; /* Define a fonte principal */
-  background-color: #c0eef1; /* Define uma cor de fundo suave */
+  background-color: #ffe1e9; /* Define uma cor de fundo suave */
   color: #333; /* Define a cor padrão do texto */
   min-height: 100vh; /* Garante que o body ocupe toda a altura da tela */
   position: relative; /* Define o contexto de posicionamento relativo para o rodapé */
@@ -17,7 +17,7 @@ body {
 
 /* Estilo do cabeçalho */
 header {
-  background-color: #4eb8d6; /* Define a cor de fundo do cabeçalho */
+  background-color: #e84c85; /* Define a cor de fundo do cabeçalho */
   padding: 20px; /* Espaçamento interno */
   text-align: center; /* Centraliza o texto */
   color: white; /* Define a cor do texto no cabeçalho */
@@ -79,7 +79,7 @@ main section {
 
 /* Seletor de ID para a seção 'home' */
 #home {
-  background-color: #68dbed; /* Cor de fundo para destacar a seção 'home' */
+  background-color: #ff97c6; /* Cor de fundo para destacar a seção 'home' */
   padding: 20px; /* Espaçamento interno */
   border-radius: 8px; /* Bordas arredondadas */
   text-align: center; /* Centraliza o texto */
@@ -87,7 +87,7 @@ main section {
 
 /* Estilo específico para o título dentro da seção 'home' */
 #home h2 {
-  color: #f7f7f7; /* Cor específica para o título da seção 'home' */
+  color: #eff7f6; /* Cor específica para o título da seção 'home' */
 }
 
 /* Estilo do contêiner que agrupa os eventos */
@@ -106,7 +106,7 @@ main section {
 
 /* Estilo do rodapé */
 footer {
-  background-color: #333; /* Cor de fundo escura */
+  background-color: #df4c83; /* Cor de fundo escura */
   color: white; /* Cor do texto do rodapé */
   text-align: center; /* Centraliza o texto */
   padding: 20px 0; /* Espaçamento interno no topo e na base */
@@ -114,14 +114,19 @@ footer {
   position: absolute; /* Posiciona o rodapé de forma absoluta */
   bottom: 0; /* Posiciona o rodapé na parte inferior da página */
 }
-li {
-  background-color: #a7eaff; /* Cor de fundo branca */
-  border: 1px solid #0576f0; /* Borda cinza clara */
-  padding: 10px; /* Espaçamento interno */
-  flex: 1; 
-  text-align: center;
-  list-style: none;
-  color: rgb(128, 125, 125);
+
+li{
+  background-color: #fc83b0; /* Cor de fundo escura */
+  border: 1px solid #faf7f8;
+  color: #fff; /* Cor do texto do rodapé */
+  text-align: center; /* Centraliza o texto */
+  padding: 20px 0; /* Espaçamento interno no topo e na base */
+  width: 50%; /* Faz com que o rodapé ocupe toda a largura */
+  display: flex;
+  justify-content: center;
+  height: 50px;
+  gap: 20px; /* Espaçamento entre os itens */
+  margin: 0;
 }
 
 /* Estilos da seção de usuários cadastrados */
@@ -137,7 +142,7 @@ li {
 
 /* Estilo para o título da seção de usuários */
 section h2 {
-  color: #00796b; /* Cor específica para o título */
+  color: #fc83b0;; /* Cor específica para o título */
   margin-bottom: 15px; /* Espaçamento inferior */
 }
 
@@ -156,6 +161,8 @@ section h2 {
 #user-list li:hover {
   background-color: #f1f1f1; /* Altera a cor de fundo ao passar o mouse */
 }
+
+
 /*Tabela*/
 table {
   width: 100%; /* Largura total da tabela */
@@ -170,7 +177,7 @@ th, td {
 }
 
 th {
-  background-color: #4caf50; /* Cor de fundo para cabeçalho */
+  background-color: #fc83b0;; /* Cor de fundo para cabeçalho */
   color: white; /* Cor do texto no cabeçalho */
 }
 
