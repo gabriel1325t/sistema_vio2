@@ -32,10 +32,11 @@ module.exports = class userController {
                   .json({ error: "Erro interno do servidor", err });
               }
             }
-          }
+          }else{
           return res
             .status(201)
             .json({ message: "Usuário criado com sucesso" });
+          }
         }
       );
     } catch (error) {
