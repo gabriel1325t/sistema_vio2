@@ -122,57 +122,68 @@ module.exports = class eventoController {
     }
   }
   static async getEventosPorData(req, res) {
-    const query = `SELECT * FROM evento`
- 
-    try{
-      connect.query(query,(err, results)=>{
-        if(err){
+    const query = `SELECT * FROM evento`;
+
+    try {
+      connect.query(query, (err, results) => {
+        if (err) {
           console.error(err);
-          return res.status(500).json({error:"Erro ao buscar eventos"})
+          return res.status(500).json({ error: "Erro ao buscar eventos" });
         }
-        const dataEvento = new Date(results[0].data_hora)
-        const dia = dataEvento.getDate()
-        const mes = dataEvento.getMonth()+1
-        const ano = dataEvento.getFullYear()
-        console.log(dia+'/'+mes+'/'+ano)
+        const dataEvento = new Date(results[0].data_hora);
+        const dia = dataEvento.getDate();
+        const mes = dataEvento.getMonth() + 1;
+        const ano = dataEvento.getFullYear();
+        console.log(dia + "/" + mes + "/" + ano);
 
-        const dataEvento1 = new Date(results[1].data_hora)
-        const dia1 = dataEvento1.getDate()
-        const mes1 = dataEvento1.getMonth()+1
-        const ano1 = dataEvento1.getFullYear()
-        console.log(dia1+'/'+mes1+'/'+ano1)
-        
-        const dataEvento2 = new Date(results[2].data_hora)
-        const dia2 = dataEvento2.getDate()
-        const mes2 = dataEvento2.getMonth()+1
-        const ano2 = dataEvento2.getFullYear()
-        console.log(dia2+'/'+mes2+'/'+ano2)
+        const dataEvento1 = new Date(results[1].data_hora);
+        const dia1 = dataEvento1.getDate();
+        const mes1 = dataEvento1.getMonth() + 1;
+        const ano1 = dataEvento1.getFullYear();
+        console.log(dia1 + "/" + mes1 + "/" + ano1);
 
-        const now = new Date()
-        const eventosPassados = results.filter(evento => new Date(evento.data_hora)<now)
-        const eventosFuturos = results.filter(evento => new Date(evento.data_hora)>= now)
+        const dataEvento2 = new Date(results[2].data_hora);
+        const dia2 = dataEvento2.getDate();
+        const mes2 = dataEvento2.getMonth() + 1;
+        const ano2 = dataEvento2.getFullYear();
+        console.log(dia2 + "/" + mes2 + "/" + ano2);
 
-        const diferencaMs = eventosFuturos[0].data_hora.getTime() - now.getTime();
-        const dias = Math.floor(diferencaMs/(1000*60*60*24));//transformar milisegundos em dias
-        const horas = Math.floor((diferencaMs%(1000*60*60*24))/(1000*60*60));
-        console.log(diferencaMs, 'Falta:'+dias+ 'dias,' +horas+'horas');
+        const now = new Date();
+        const eventosPassados = results.filter(
+          (evento) => new Date(evento.data_hora) < now
+        );
+        const eventosFuturos = results.filter(
+          (evento) => new Date(evento.data_hora) >= now
+        );
+
+        const diferencaMs =
+          eventosFuturos[0].data_hora.getTime() - now.getTime();
+        const dias = Math.floor(diferencaMs / (1000 * 60 * 60 * 24)); //transformar milisegundos em dias
+        const horas = Math.floor(
+          (diferencaMs % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)
+        );
+        console.log(diferencaMs, "Falta:" + dias + "dias," + horas + "horas");
 
         //comparando datas
-        const dataFiltro = new Date('2024-11-20').toISOString().split("T");
-        const eventosDia = results.filter(evento => new Date(evento.data_hora).toISOString().split("T")[0] === dataFiltro[0]);
+        const dataFiltro = new Date("2024-11-20").toISOString().split("T");
+        const eventosDia = results.filter(
+          (evento) =>
+            new Date(evento.data_hora).toISOString().split("T")[0] ===
+            dataFiltro[0]
+        );
 
         console.log("Eventos:", eventosDia);
-        
-        return res.status(200).json({message:'ok',eventosPassados,eventosFuturos})
-      })
+
+        return res
+          .status(200)
+          .json({ message: "ok", eventosPassados, eventosFuturos });
+      });
+    } catch (error) {
+      console.error(err);
+      return res.status(500).json({ error: "Erro ao buscar eventos" });
     }
-    catch(error){
-        console.error(err);
-        return res.status(500).json({error:"Erro ao buscar eventos"})
-      }
-      
-  }   
-  static async getEventosdia(req,res){
+  }
+  static async getEventosdia(req, res) {
     const dataRecebida = req.params.data;
 
     // Converte a data recebida em um objeto Date
@@ -180,18 +191,21 @@ module.exports = class eventoController {
     const dataFinal = new Date(dataInicial);
     dataFinal.setDate(dataInicial.getDate() + 7); // Adiciona 7 dias à data inicial
 
-    const dataInicial2 = new Date("2024-01-01").toISOString().split('T')[0];
-    const dataFinal2 = new Date("2024-01-07").toISOString().split('T')[0];
+    const dataInicial2 = new Date("2024-01-01").toISOString().split("T")[0];
+    const dataFinal2 = new Date("2024-01-07").toISOString().split("T")[0];
 
     const query = `
       SELECT * FROM evento WHERE data_hora >= ? AND data_hora <= ?`;
     try {
-     
-      connect.query(query,[dataInicial2, dataFinal2], (err, results) => {
-        if (err) {console.error(err);return res.status(500).json({ error: "Erro ao buscar eventos" });
+      connect.query(query, [dataInicial2, dataFinal2], (err, results) => {
+        if (err) {
+          console.error(err);
+          return res.status(500).json({ error: "Erro ao buscar eventos" });
         }
 
-        return res.status(200).json({ message: "OK", dataInicial2, dataFinal2 });
+        return res
+          .status(200)
+          .json({ message: "OK", dataInicial2, dataFinal2 });
       });
     } catch (error) {
       console.error(err);
