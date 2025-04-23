@@ -5,7 +5,7 @@ const userController = require("../controllers/userController")
 router.post('/user', userController.createUser);
 router.get('/user', userController.getAllUsers);
 router.put('/user', userController.updateUser);
-router.delete('/user/:cpf', userController.deleteUser);
+router.delete('/user/:id', userController.deleteUser);
 router.post('/login', userController.loginUser);
 
 const organizadorController = require("../controllers/organizadorController")
