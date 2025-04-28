@@ -1,4 +1,5 @@
 const connect = require("../db/connect");
+const jwt = require("jsonwebtoken");
 const validateUser = require("../services/validateUser");
 const validateCpf = require("../services/validateCpf");
 
@@ -32,10 +33,10 @@ module.exports = class userController {
                   .json({ error: "Erro interno do servidor", err });
               }
             }
-          }else{
-          return res
-            .status(201)
-            .json({ message: "Usuário criado com sucesso" });
+          } else {
+            return res
+              .status(201)
+              .json({ message: "Usuário criado com sucesso" });
           }
         }
       );
@@ -145,7 +146,20 @@ module.exports = class userController {
           return res.status(401).json({ error: "Senha incorreta" });
         }
 
-        return res.status(200).json({ message: "Login bem-sucedido", user });
+        const token = jwt.sign({ id: user.id_usuario }, process.env.SECRET, {
+          expiresIn: "1h",
+        });
+
+        //remove um atributo de um objeto
+        delete user.password;
+
+        return res.status(200).json({
+        message:"Login bem-sucedido",
+        user,
+        token
+      })
+
+
       });
     } catch (error) {
       console.error("Erro ao executar a consulta:", error);

@@ -1,6 +1,8 @@
 const express = require("express"); //Importa o módulo Express
 const testConnect = require("./db/testConnect");
 const cors = require("cors");
+require("dotenv-safe").config();
+const jwt = require("jsonwebtoken");
 
 
 class AppController {
